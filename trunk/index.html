@@ -11,21 +11,40 @@
     .input { position: absolute; visibility:hidden; }
   </style>
   <script type="text/javascript">
+    var elm_btm = 0;
     $(document).ready(function() {
-	$(".draggable").draggable();
-	$(".draggable").click( function(){
-	    $("#elm-key").val($(this).attr("id"));
-	    $("#elm-value").val($(this).text());
-	    $("#elm-value").css("top", $(this).position().top );
-	    $("#elm-value").css("left", $(this).position().left );
-	    $("#elm-value").css("visibility", "visible" );
+        $("#add-button").click(function(){
+	    var id = elm_btm;
+	    elm_btm = elm_btm + 1;
+
+	    $("#draw-area").append('<div class="draggable" id="d' + id + '">' + id + '</div>');
+	    $("#d" + id).draggable();
+	    $("#d" + id).click( function(){
+		$("#elm-key").val($(this).attr("id"));
+		$("#elm-value").val($(this).text());
+		$("#elm-value").css("top", $(this).position().top );
+		$("#elm-value").css("left", $(this).position().left );
+		$("#elm-value").css("visibility", "visible" );
+		$("#elm-value").focus();
+	    });
 	});
-	$("#elm").submit( function() {
-	    $( "#" + $("#elm-key").val() ).text($("#elm-value").val());
+	var text_submit = ( function() {
+	    var s = $("#elm-value").val();
+	    var id = "#" + $("#elm-key").val();
+	    if ( id != "" ) {
+		$( id ).text(s);
+	    } else {
+		$( id ).css("visibility","hidden");
+	    }
+	    $( id ).css("width", (s.length * 20) + " px");
 	    $("#elm-value").css("visibility", "hidden" );
 	    return false;
 	});
+	$("#elm").submit( text_submit );
+	$("#elm-value").blur( text_submit );
     });
+
+
 
   </script>
 </head>
@@ -33,23 +52,14 @@
 <!--[if IE 5]><div id="ie5" class="ie"><![endif]-->
 <!--[if IE 6]><div id="ie6" class="ie"><![endif]-->
 <!--[if IE 7]><div id="ie7" class="ie"><![endif]-->
+<input id="add-button" type="button" value="add element" />
 
-
-<div class="demo">
-
-<div id="data-01" class="draggable" style="top:10px; left:10px;">data 01</div>
-<div id="data-02" class="draggable" style="top:10px; left:200px;">data 02</div>
-<div id="data-03" class="draggable" style="top:50px; left:10px;">data 03</div>
-<div id="data-04" class="draggable" style="top:50px; left:200px;">data 04</div>
-
+<div id="draw-area">
+</div>
 
 <form id="elm">
   <input id="elm-key" class="input" />
   <input id="elm-value" class="input" />
 </form>
-
-
-
-</div><!-- End demo -->
 
 </body>
